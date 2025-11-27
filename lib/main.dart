@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:short_video/screens/home_screen.dart';
+
+import 'features/short_video/screens/home_screen.dart';
 
 void main() {
   runApp(const ShortVideo());
