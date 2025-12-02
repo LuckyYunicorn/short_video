@@ -6,8 +6,8 @@ import 'package:video_player/video_player.dart';
 import 'icons_column.dart';
 
 class VideoStructure extends StatefulWidget {
-  final String url;
-  const VideoStructure({super.key, required this.url});
+  final File file;
+  const VideoStructure({super.key, required this.file});
 
   @override
   State<VideoStructure> createState() => _VideoStructureState();
@@ -20,7 +20,7 @@ class _VideoStructureState extends State<VideoStructure> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.file(File(widget.url))
+    _controller = VideoPlayerController.file(widget.file)
       ..initialize().then((_) {
         _controller.play();
         _controller.setLooping(true);

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -13,6 +15,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    File? file;
     return BlocProvider(
       create: (context) => ShortVideoBloc()..add(GetShortVideos()),
       child: Scaffold(
@@ -28,13 +31,13 @@ class HomeScreen extends StatelessWidget {
               AppCacheManager.getFile(state.shortVideoList, 0);
               return PageView.builder(
                 onPageChanged: (index) async{
-                 await AppCacheManager.getFile(state.shortVideoList, index);
+                file = await AppCacheManager.getFile(state.shortVideoList, index);
                 },
                 scrollDirection: Axis.vertical,
                 itemCount: state.shortVideoList.length,
                 itemBuilder: (context, index) {
                   AppCacheManager.getFile(state.shortVideoList, index);
-                  return VideoStructure(url: state.shortVideoList[index]);
+                  return VideoStructure(file: file ?? File("path"));
                 },
               );
             }
