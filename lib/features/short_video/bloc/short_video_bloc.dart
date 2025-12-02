@@ -11,7 +11,7 @@ class ShortVideoBloc extends Bloc<ShortVideoEvent, ShortVideoState> {
     Emitter<ShortVideoState> emit,
   ) async {
     try {
-      Future.delayed(Duration(seconds: 2));
+      // Future.delayed(Duration(seconds: 2));
       List<String> videoList = [
         'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
         'https://www.pexels.com/download/video/7564024/',

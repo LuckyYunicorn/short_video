@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -18,7 +20,7 @@ class _VideoStructureState extends State<VideoStructure> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url))
+    _controller = VideoPlayerController.file(File(widget.url))
       ..initialize().then((_) {
         _controller.play();
         _controller.setLooping(true);
