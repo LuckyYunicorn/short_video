@@ -1,30 +1,28 @@
+import 'dart:io';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:short_video/data/short_video_dummy_data.dart';
 import 'package:short_video/features/short_video/bloc/short_video_event.dart';
 import 'package:short_video/features/short_video/bloc/short_video_state.dart';
-import 'package:bloc/bloc.dart';
+import 'package:short_video/features/short_video/widgets/cache_manager.dart';
 
 class ShortVideoBloc extends Bloc<ShortVideoEvent, ShortVideoState> {
-  ShortVideoBloc() : super(ShortVideoInitial()) {
-    on<GetShortVideos>(_getShortVideos);
+  ShortVideoBloc() : super(ShortVideoState()) {
+    on<GetShortVideo>(_getShortVideo);
   }
-  Future<void> _getShortVideos(
-    GetShortVideos event,
+
+  Future<void> _getShortVideo(
+    GetShortVideo event,
     Emitter<ShortVideoState> emit,
   ) async {
-    try {
-      // Future.delayed(Duration(seconds: 2));
-      List<String> videoList = [
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
-        'https://www.pexels.com/download/video/7564024/',
-        'https://www.pexels.com/download/video/9032179/',
-        'https://www.pexels.com/download/video/8925055/',
-      ];
-      if (videoList.isNotEmpty) {
-        emit(ShortVideoLoaded(shortVideoList: videoList));
-      } else {
-        emit(ShortVideoError(message: "Unable to load video"));
-      }
-    } catch (e) {
-      emit(ShortVideoError(message: e.toString()));
+    emit(state.copyWith(isLoading: true));
+    List<String> videos = [];
+
+    for (int i = 0; i < DummyData.videos.length; i++) {
+      File video = await VideoCacheManager.getVideo(url: DummyData.videos[i]);
+      videos.add(video.path);
     }
+
+    emit(state.copyWith(isLoading: false, videoUrl: videos));
   }
 }

@@ -2,46 +2,48 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:short_video/data/short_video_dummy_data.dart';
 import 'package:short_video/features/short_video/bloc/short_video_bloc.dart';
 import 'package:short_video/features/short_video/bloc/short_video_event.dart';
-import 'package:short_video/features/short_video/bloc/short_video_state.dart';
-import 'package:short_video/features/short_video/cache_manager/cache_manager.dart';
+import 'package:short_video/features/short_video/widgets/cache_manager.dart';
 
-import '../widgets/video_structure.dart';
+import '../bloc/short_video_state.dart';
+import 'short_video_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+Future<File> getVideo() async {
+  return await VideoCacheManager.getVideo(url: DummyData.videos[0]);
+}
+
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
   Widget build(BuildContext context) {
-    File? file;
     return BlocProvider(
-      create: (context) => ShortVideoBloc()..add(GetShortVideos()),
+      create: (context) =>
+      ShortVideoBloc()
+        ..add(GetShortVideo()),
       child: Scaffold(
         body: BlocBuilder<ShortVideoBloc, ShortVideoState>(
           builder: (context, state) {
-            if (state is ShortVideoInitial) {
-              return Center(child: CircularProgressIndicator());
-            }
-            if (state is ShortVideoError) {
-              return Center(child: Text(state.message));
-            }
-            if (state is ShortVideoLoaded) {
-              AppCacheManager.getFile(state.shortVideoList, 0);
-              return PageView.builder(
-                onPageChanged: (index) async{
-                file = await AppCacheManager.getFile(state.shortVideoList, index);
-                },
-                scrollDirection: Axis.vertical,
-                itemCount: state.shortVideoList.length,
-                itemBuilder: (context, index) {
-                  AppCacheManager.getFile(state.shortVideoList, index);
-                  return VideoStructure(file: file ?? File("path"));
-                },
-              );
-            }
-            return Center(child: SizedBox());
+            return PageView.builder(
+              onPageChanged: (value) {
+
+              },
+              scrollDirection: Axis.vertical,
+              itemCount: state.videoUrl.length,
+              itemBuilder: (context, index) {
+                return SafeArea(
+                  child: ShortVideoScreen(videoUrl: state.videoUrl[index]),
+                );
+              },
+            );
           },
         ),
       ),

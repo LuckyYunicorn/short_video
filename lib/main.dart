@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'features/short_video/screens/home_screen.dart';
 
@@ -12,6 +13,7 @@ class ShortVideo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Short Video",
       debugShowCheckedModeBanner: false,
       home: HomeScreen(),
     );
