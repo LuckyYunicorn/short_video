@@ -10,21 +10,12 @@ import 'package:short_video/features/short_video/widgets/cache_manager.dart';
 import '../bloc/short_video_state.dart';
 import 'short_video_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-Future<File> getVideo() async {
-  return await VideoCacheManager.getVideo(url: DummyData.videos[0]);
-}
-
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
   Widget build(BuildContext context) {
+    VideoCacheManager videoCacheManager = VideoCacheManager();
     return BlocProvider(
       create: (context) =>
       ShortVideoBloc()
@@ -32,13 +23,17 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         body: BlocBuilder<ShortVideoBloc, ShortVideoState>(
           builder: (context, state) {
+            if(state.isLoading){
+              return const Center(child: CircularProgressIndicator());
+            }
             return PageView.builder(
-              onPageChanged: (value) {
-
+              onPageChanged: (value) async{
+               await videoCacheManager.clearCache(url: state.videoUrl[value - 1]);
               },
               scrollDirection: Axis.vertical,
               itemCount: state.videoUrl.length,
               itemBuilder: (context, index) {
+
                 return SafeArea(
                   child: ShortVideoScreen(videoUrl: state.videoUrl[index]),
                 );

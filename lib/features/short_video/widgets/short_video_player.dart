@@ -16,6 +16,7 @@ class ShortVideoPlayer extends StatefulWidget {
 class _ShortVideoPlayerState extends State<ShortVideoPlayer> {
   late VideoPlayerController _controller;
   bool _isInitialized = false;
+  bool isPlaying = true;
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _ShortVideoPlayerState extends State<ShortVideoPlayer> {
 
   @override
   void dispose() {
+    _controller.pause();
     _controller.dispose();
     super.dispose();
   }
@@ -40,10 +42,18 @@ class _ShortVideoPlayerState extends State<ShortVideoPlayer> {
   @override
   Widget build(BuildContext context) {
     return _isInitialized
-        ? SizedBox(
-            height: double.infinity,
-            width: double.infinity,
-            child: VideoPlayer(_controller),
+        ? InkWell(
+            onTap: () {
+              isPlaying ? _controller.pause() : _controller.play();
+              setState(() {
+                isPlaying = !isPlaying;
+              });
+            },
+            child: SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+              child: VideoPlayer(_controller),
+            ),
           )
         : const Center(child: CircularProgressIndicator());
   }

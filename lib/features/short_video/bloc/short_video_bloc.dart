@@ -15,14 +15,19 @@ class ShortVideoBloc extends Bloc<ShortVideoEvent, ShortVideoState> {
     GetShortVideo event,
     Emitter<ShortVideoState> emit,
   ) async {
+    VideoCacheManager videoCacheManager = VideoCacheManager();
     emit(state.copyWith(isLoading: true));
     List<String> videos = [];
 
     for (int i = 0; i < DummyData.videos.length; i++) {
-      File video = await VideoCacheManager.getVideo(url: DummyData.videos[i]);
+      File video = await videoCacheManager.getVideo(url: DummyData.videos[i]);
       videos.add(video.path);
     }
-
-    emit(state.copyWith(isLoading: false, videoUrl: videos));
+    emit(
+      state.copyWith(
+        isLoading: false,
+        videoUrl: videos,
+      ),
+    );
   }
 }

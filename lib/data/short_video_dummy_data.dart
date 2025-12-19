@@ -6,6 +6,10 @@ class DummyData {
     "https://www.pexels.com/download/video/7564024/",
     "https://www.pexels.com/download/video/9032179/",
     "https://www.pexels.com/download/video/8925055/",
+    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+    "https://www.pexels.com/download/video/7564024/",
+    "https://www.pexels.com/download/video/9032179/",
+    "https://www.pexels.com/download/video/8925055/",
   ];
 
 }
