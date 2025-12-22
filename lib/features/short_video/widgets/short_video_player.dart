@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:short_video/features/short_video/widgets/cache_manager.dart';
 import 'package:video_player/video_player.dart';
 
 class ShortVideoPlayer extends StatefulWidget {
@@ -22,7 +21,7 @@ class _ShortVideoPlayerState extends State<ShortVideoPlayer> {
   void initState() {
     super.initState();
 
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+    _controller = VideoPlayerController.file(File(widget.videoUrl))
       ..initialize().then((_) {
         setState(() {
           _isInitialized = true;
@@ -49,11 +48,29 @@ class _ShortVideoPlayerState extends State<ShortVideoPlayer> {
                 isPlaying = !isPlaying;
               });
             },
-            child: SizedBox(
-              height: double.infinity,
-              width: double.infinity,
-              child: VideoPlayer(_controller),
-            ),
+            child: isPlaying
+                ? SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: VideoPlayer(_controller),
+                  )
+                : SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: Stack(
+                      children: [
+                        VideoPlayer(_controller),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Icon(
+                            Icons.play_arrow_rounded,
+                            size: 80,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
           )
         : const Center(child: CircularProgressIndicator());
   }
